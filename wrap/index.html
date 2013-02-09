@@ -14,33 +14,32 @@
         <form>
 			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla commodo massa vel lacus vulputate sollicitudin.</p>
 			<p>Aliquam ac magna mauris, et pulvinar risus. Nunc tempus, quam quis ultricies rutrum, elit est ornare quam, vitae auctor tellus dui at ipsum. Curabitur rhoncus fringilla porttitor.</p>
-			<p id="sample" style="display:none;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla commodo massa vel lacus vulputate sollicitudin.<br />Aliquam ac magna mauris, et pulvinar risus. Nunc tempus, quam quis ultricies rutrum, elit est ornare quam, vitae auctor tellus dui at ipsum. Curabitur rhoncus fringilla porttitor.</p>
-			<p>
-				Compare the line-breaks in the HTML/CSS-rendered text above to the logged text 
-				lines in the browser's console.
+			<hr />
+			<p style="text-indent:0; font-family:sans-serif;">
+				The line breaks above are created from the CSS settings; the line breaks below 
+				are created based on what is returned by the 
+				<em>wrap(text, width, indent, style)</em> function.
 			</p>
+			<hr />
 		</form>
 
 		<script src=".js" type="text/javascript"></script>
+		<script src="../proxy.js" type="text/javascript"></script>
 		<script type="text/javascript">
-  	var form = document.getElementsByTagName("form");
-  	var sample = document.getElementById("sample").innerText;
+  	var form = document.getElementsByTagName("form")[0];
 
   	var wrapped = wrap(
-  	    sample, 300, 20,
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla commodo massa vel lacus vulputate sollicitudin.\n\
+Aliquam ac magna mauris, et pulvinar risus. Nunc tempus, quam quis ultricies rutrum, elit est ornare quam, vitae auctor tellus dui at ipsum. Curabitur rhoncus fringilla porttitor.",
+		300, 20,
   	    "font-size:14px; font-family:serif; letter-spacing:normal;"
   	);
   	console.log("wrap(text, width, indent, style) returns: ", wrapped);
 
-  	console.group("rendered lines");
-	{
-  		console.log(
-  			"  " + wrapped.map(function (v, i, a) {
-  	    		return v.join("\n");
-  			}).join("\n  ")
-  		);
-  	}
-  	console.groupEnd();
+  	wrapped.forEach(function (v) {
+  		var para = form.appendChild(document.createElement("P"));
+  		para.innerHTML = v.join("<br />\n");
+  	});
 		</script>
     </body>
 </html>
