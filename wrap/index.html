@@ -15,6 +15,10 @@
 			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla commodo massa vel lacus vulputate sollicitudin.</p>
 			<p>Aliquam ac magna mauris, et pulvinar risus. Nunc tempus, quam quis ultricies rutrum, elit est ornare quam, vitae auctor tellus dui at ipsum. Curabitur rhoncus fringilla porttitor.</p>
 			<p id="sample" style="display:none;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla commodo massa vel lacus vulputate sollicitudin.<br />Aliquam ac magna mauris, et pulvinar risus. Nunc tempus, quam quis ultricies rutrum, elit est ornare quam, vitae auctor tellus dui at ipsum. Curabitur rhoncus fringilla porttitor.</p>
+			<p>
+				Compare the line-breaks in the HTML/CSS-rendered text above to the logged text 
+				lines in the browser's console.
+			</p>
 		</form>
 
 		<script src=".js" type="text/javascript"></script>
@@ -26,16 +30,17 @@
   	    sample, 300, 20,
   	    "font-size:14px; font-family:serif; letter-spacing:normal;"
   	);
-  	console.log(wrapped);
-  	logWrapped(wrapped);
+  	console.log("wrap(text, width, indent, style) returns: ", wrapped);
 
-  	function logWrapped(wrapped) {
+  	console.group("rendered lines");
+	{
   		console.log(
-  	        "  " + wrapped.map(function (v, i, a) {
-  	        	return v.join("\n");
-  	        }).join("\n  ")
-  	    );
+  			"  " + wrapped.map(function (v, i, a) {
+  	    		return v.join("\n");
+  			}).join("\n  ")
+  		);
   	}
+  	console.groupEnd();
 		</script>
     </body>
 </html>
