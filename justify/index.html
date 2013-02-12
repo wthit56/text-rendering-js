@@ -3,7 +3,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Text Rendering with JS</title>
+        <title>Justify — Text Rendering with JS</title>
 		<style type="text/css">
 			body {font-size:14px; line-height:25px;}
 			form {width:300px; margin:auto;}
@@ -25,33 +25,89 @@
 		<script src="../proxy.js" type="text/javascript"></script>
 		<script src=".js" type="text/javascript"></script>
 		<script type="text/javascript">
+  	// configuration
   	var form = document.getElementsByTagName("form")[0];
+  	var div, span;
+  	var wordPadding;
+  	var indent = 20, fullLineWidth = 300, lineWidth = fullLineWidth;
+
+  	// this is a "fake" space
+  	//    the idea is that if you select the text, you can copy it with the spaces included.
+  	//    it may behave a little strangley, but it works for the most part.
+  	var space = (function () {
+  		var space = document.createElement("SPAN");
+  		space.style.display = "inline-block";
+  		space.style.width = "0px";
+  		space.innerHTML = "&nbsp;";
+
+  		return space;
+  	})();
 
   	[
   	    "Lorem ipsum dolor sit amet, consectetur ",
   	    "adipiscing elit. Nulla commodo massa vel lacus ",
   	    "vulputate sollicitudin."
-  	].forEach(function (v, i, a) {
-  		var div = document.createElement("DIV");
-  		if (i === 0) { div.style.marginLeft = "20px"; }
+  	].forEach(function (line, i, a) { // loop through each line
+  		// create <div> tag
+  		div = document.createElement("DIV");
+  		// this will be used as a line
 
-  		if (i < a.length - 1) {
-  			var wordPadding = justify(v, ((i === 0) ? 280 : 300));
-  			console.log(wordPadding);
+  		form.appendChild(div);
 
-  			v = v.replace(/\s*$/, "").split(" ").forEach(function (v, i, a) {
-  				var span = div.appendChild(document.createElement("SPAN"));
-  				span.innerText = v;
-
-  				if (i < a.length - 1) {
-  					span.style.marginRight = wordPadding + "px";
-  				}
-  			});
+  		// is the first line...
+  		if (i === 0) {
+  			// ...so add indent
+  			div.style.marginLeft = indent + "px";
+  			// line width will be smaller because of indent
+  			lineWidth = fullLineWidth - indent;
   		}
+  		// is not the first line...
   		else {
-  			div.innerText = v;
+  			// ...so line width will be full line width
+  			lineWidth = fullLineWidth;
   		}
 
+  		// not the last line...
+  		if (i < a.length - 1) {
+  			// ...so justify the text
+
+  			// find word padding
+  			wordPadding = justify(line, lineWidth);
+
+  			// insert justified line-text into div
+  			line
+  	            .replace(/\s*$/, "") // remove trailing whitespace
+  	            .split(" ") // split into words (spaces only for demonstration purposes)
+  	            .forEach(function (word, i, a) {
+  	            	// create <span> tag
+  	            	span = document.createElement("SPAN");
+  	            	// this will be used as a word
+  	            	div.appendChild(span);
+
+  	            	// insert text into span
+  	            	span.innerText = word;
+
+  	            	// add selectable space
+  	            	span.appendChild(space.cloneNode(true));
+
+  	            	// word is not the last word in the line...
+  	            	if (i < a.length - 1) {
+  	            		// ...so add word-padding to span
+  	            		span.style.marginRight = wordPadding + "px";
+  	            	}
+
+  	            	// add span to div
+  	            	div.appendChild(span);
+  	            });
+
+  		}
+  		// is the last line...
+  		else {
+  			// ...so insert text directly into div
+  			div.innerText = line;
+  		}
+
+  		// add div tag into form
   		form.appendChild(div);
   	});
 		</script>
